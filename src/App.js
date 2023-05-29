@@ -1,3 +1,5 @@
+import AddQuest from "./AddQuest";
+
 function App() {
   return (
     <div className="flex h-screen justify-center items-center">
@@ -5,6 +7,7 @@ function App() {
         <h1 className="text-5xl font-work font-bold w-fit text-center">
           Quests To Do
         </h1>
+        <AddQuest />
       </div>
     </div>
   );
