@@ -18,6 +18,7 @@ function App() {
       status: "aberto",
       created_at: new Date(Date.now()).toUTCString(),
     };
+    auxQuests.push(createdQuest);
   }
 
   return (
