@@ -11,6 +11,13 @@ function App() {
       id = auxQuests[auxQuests.length - 1].id;
     }
     id++;
+
+    const createdQuest = {
+      id: id,
+      title: title,
+      status: "aberto",
+      created_at: new Date(Date.now()).toUTCString(),
+    };
   }
 
   return (
