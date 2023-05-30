@@ -1,5 +1,6 @@
 import { useState } from "react";
 import AddQuest from "./AddQuest";
+import QuestList from "./QuestList";
 
 function App() {
   const [quests, setQuests] = useState([]);
@@ -34,6 +35,7 @@ function App() {
           Quests To Do
         </h1>
         <AddQuest saveAddQuest={saveAddQuest} />
+        <QuestList quests={quests} />
       </div>
     </div>
   );
