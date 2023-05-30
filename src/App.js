@@ -1,6 +1,9 @@
+import { useState } from "react";
 import AddQuest from "./AddQuest";
 
 function App() {
+  const [quests, setQuests] = useState([]);
+
   function saveAddQuest(title) {
     console.log(title);
   }
