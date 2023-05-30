@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 function AddQuest(props) {
+  const [title, setTitle] = useState();
   return (
     <div className="flex gap-4 w-full justify-center items-center">
       <input
