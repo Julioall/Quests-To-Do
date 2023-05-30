@@ -20,6 +20,11 @@ function App() {
     };
     auxQuests.push(createdQuest);
     localStorage.setItem("quests", JSON.stringify(auxQuests));
+    getQuests();
+  }
+
+  function getQuests() {
+    setQuests(JSON.parse(window.localStorage.getItem("quests")));
   }
 
   return (
