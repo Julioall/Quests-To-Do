@@ -11,7 +11,7 @@ function AddQuest(props) {
       />
       <button
         className="flex items-center text-center rounded-full bg-primary h-fit px-2 text-lg transform ease-out duration-300"
-        onClick={() => props.saveAddQuest("Falar com o ferreiro")}
+        onClick={() => props.saveAddQuest(title)}
       >
         +
       </button>
