@@ -7,6 +7,10 @@ function App() {
   function saveAddQuest(title) {
     let auxQuests = quests;
     let id = 0;
+    if (auxQuests.length) {
+      id = auxQuests[auxQuests.length - 1].id;
+    }
+    id++;
   }
 
   return (
