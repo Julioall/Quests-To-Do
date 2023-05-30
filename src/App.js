@@ -5,7 +5,8 @@ function App() {
   const [quests, setQuests] = useState([]);
 
   function saveAddQuest(title) {
-    console.log(title);
+    let auxQuests = quests;
+    let id = 0;
   }
 
   return (
