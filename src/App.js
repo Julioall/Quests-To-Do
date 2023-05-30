@@ -19,6 +19,7 @@ function App() {
       created_at: new Date(Date.now()).toUTCString(),
     };
     auxQuests.push(createdQuest);
+    localStorage.setItem("quests", JSON.stringify(auxQuests));
   }
 
   return (
