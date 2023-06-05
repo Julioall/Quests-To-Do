@@ -6,6 +6,7 @@ export default function QuestList(props) {
       {props.quests.map((quest) => {
         return (
           <QuestItem
+            key={quest.id}
             quest={quest}
             saveEditQuest={props.saveEditQuest}
             saveConcluedQuest={props.saveConcluedQuest}

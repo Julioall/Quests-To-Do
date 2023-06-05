@@ -6,6 +6,9 @@ function App() {
   const localQuests = JSON.parse(window.localStorage.getItem("quests")) || [];
   const [quests, setQuests] = useState(localQuests);
 
+  const concluedQuests = quests.filter((quest) => quest.status === "concluído");
+  const notConcluedQuests = quests.filter((quest) => quest.status === "aberto");
+
   function saveEditQuest(quest, title) {
     let auxQuests = quests;
     const editedQuest = {
@@ -76,11 +79,24 @@ function App() {
           Quests To Do
         </h1>
         <AddQuest saveAddQuest={saveAddQuest} />
-        <QuestList
-          quests={quests}
-          saveEditQuest={saveEditQuest}
-          saveConcluedQuest={saveConcluedQuest}
-        />
+
+        <div className="flex flex-col gap-4 w-full items-center">
+          <h2>Abertas</h2>
+          <QuestList
+            quests={notConcluedQuests}
+            saveEditQuest={saveEditQuest}
+            saveConcluedQuest={saveConcluedQuest}
+          />
+        </div>
+
+        <div className="flex flex-col gap-4 w-full items-center">
+          <h2>Concluídas</h2>
+          <QuestList
+            quests={concluedQuests}
+            saveEditQuest={saveEditQuest}
+            saveConcluedQuest={saveConcluedQuest}
+          />
+        </div>
       </div>
     </div>
   );
