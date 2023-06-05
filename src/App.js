@@ -26,7 +26,25 @@ function App() {
     getQuests();
   }
 
-  function saveConcluedQuest(quest) {}
+  function saveConcluedQuest(quest) {
+    let auxQuests = quests;
+    const editedQuest = {
+      id: quest.id,
+      title: quest.title,
+      status: "concluído",
+      created_at: quest.created_at,
+    };
+
+    const findQuestPosition = auxQuests.findIndex(
+      (quest) => quest.id === editedQuest.id
+    );
+
+    auxQuests.splice(findQuestPosition, 1, editedQuest);
+
+    localStorage.setItem("quests", JSON.stringify(auxQuests));
+
+    getQuests();
+  }
 
   function saveAddQuest(title) {
     let auxQuests = quests;
