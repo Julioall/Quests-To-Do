@@ -5,6 +5,10 @@ import QuestList from "./QuestList";
 function App() {
   const [quests, setQuests] = useState([]);
 
+  function saveEditQuest(quest, title) {}
+
+  function saveConcluedQuest(quest) {}
+
   function saveAddQuest(title) {
     let auxQuests = quests;
     let id = 0;
@@ -35,7 +39,11 @@ function App() {
           Quests To Do
         </h1>
         <AddQuest saveAddQuest={saveAddQuest} />
-        <QuestList quests={quests} />
+        <QuestList
+          quests={quests}
+          saveEditQuest={saveEditQuest}
+          saveConcluedQuest={saveConcluedQuest}
+        />
       </div>
     </div>
   );
