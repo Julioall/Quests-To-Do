@@ -18,6 +18,13 @@ export default function QuestItem(props) {
           type="checkbox"
           checked={checked}
           className="checkbox rounded-full border"
+          onChange={() => {
+            if (conclued) return;
+            else {
+              setChecked(!checked);
+              props.saveConcluedQuest(props.quest);
+            }
+          }}
         />
 
         {editMode && !conclued ? (
