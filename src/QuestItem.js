@@ -33,10 +33,12 @@ export default function QuestItem(props) {
           </p>
         )}
       </div>
-      <div className="flex gap-4 w-full sm:w-fit justify-center">
-        <button onClick={() => setEditMode(!editMode)}>Editar</button>
-        <button>Excluir</button>
-      </div>
+      {!conclued && (
+        <div className="flex gap-4 w-full sm:w-fit justify-center">
+          <button onClick={() => setEditMode(!editMode)}>Editar</button>
+          <button>Excluir</button>
+        </div>
+      )}
     </div>
   );
 }
