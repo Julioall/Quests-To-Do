@@ -35,7 +35,14 @@ export default function QuestItem(props) {
       </div>
       {!conclued && (
         <div className="flex gap-4 w-full sm:w-fit justify-center">
-          <button onClick={() => setEditMode(!editMode)}>Editar</button>
+          <button
+            onClick={() => {
+              if (editMode) props.saveEditQuest(props.quest, title);
+              setEditMode(!editMode);
+            }}
+          >
+            Editar
+          </button>
           <button>Excluir</button>
         </div>
       )}
