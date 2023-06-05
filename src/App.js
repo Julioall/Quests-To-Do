@@ -3,7 +3,8 @@ import AddQuest from "./AddQuest";
 import QuestList from "./QuestList";
 
 function App() {
-  const [quests, setQuests] = useState([]);
+  const localQuests = JSON.parse(window.localStorage.getItem("quests")) || [];
+  const [quests, setQuests] = useState(localQuests);
 
   function saveEditQuest(quest, title) {}
 
