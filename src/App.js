@@ -3,7 +3,55 @@ import AddQuest from "./AddQuest";
 import QuestList from "./QuestList";
 
 function App() {
-  const [quests, setQuests] = useState([]);
+  const localQuests = JSON.parse(window.localStorage.getItem("quests")) || [];
+  const [quests, setQuests] = useState(localQuests);
+
+  const concludedQuests = quests.filter(
+    (quest) => quest.status === "concluído"
+  );
+  const notConcludedQuests = quests.filter(
+    (quest) => quest.status === "aberto"
+  );
+
+  function saveEditQuest(quest, title) {
+    let auxQuests = quests;
+    const editedQuest = {
+      id: quest.id,
+      title: title || quest.title,
+      status: quest.status,
+      created_at: quest.created_at,
+    };
+
+    const findQuestPosition = auxQuests.findIndex(
+      (quest) => quest.id === editedQuest.id
+    );
+
+    auxQuests.splice(findQuestPosition, 1, editedQuest);
+
+    localStorage.setItem("quests", JSON.stringify(auxQuests));
+
+    getQuests();
+  }
+
+  function saveConcludedQuest(quest) {
+    let auxQuests = quests;
+    const editedQuest = {
+      id: quest.id,
+      title: quest.title,
+      status: "concluído",
+      created_at: quest.created_at,
+    };
+
+    const findQuestPosition = auxQuests.findIndex(
+      (quest) => quest.id === editedQuest.id
+    );
+
+    auxQuests.splice(findQuestPosition, 1, editedQuest);
+
+    localStorage.setItem("quests", JSON.stringify(auxQuests));
+
+    getQuests();
+  }
 
   function saveAddQuest(title) {
     let auxQuests = quests;
@@ -35,7 +83,24 @@ function App() {
           Quests To Do
         </h1>
         <AddQuest saveAddQuest={saveAddQuest} />
-        <QuestList quests={quests} />
+
+        <div className="flex flex-col gap-4 w-full items-center">
+          <h2>Abertas</h2>
+          <QuestList
+            quests={notConcludedQuests}
+            saveEditQuest={saveEditQuest}
+            saveConcludedQuest={saveConcludedQuest}
+          />
+        </div>
+
+        <div className="flex flex-col gap-4 w-full items-center">
+          <h2>Concluídas</h2>
+          <QuestList
+            quests={concludedQuests}
+            saveEditQuest={saveEditQuest}
+            saveConcludedQuest={saveConcludedQuest}
+          />
+        </div>
       </div>
     </div>
   );
