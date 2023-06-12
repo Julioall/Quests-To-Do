@@ -8,26 +8,26 @@ export default function QuestItem(props) {
   // chama o estado de edição da missão no componente
   const [editMode, setEditMode] = useState(false);
   // define o visual da missão na lista
-  const conclued = props.quest.status === "concluído";
+  const concluded = props.quest.status === "concluído";
 
   return (
     <div className="flex gap-4 flex-col md:flex-row items-center">
       <div className="flex gap-4 items-center w-full sm:w-[80%]">
         <input
-          disabled={conclued}
+          disabled={concluded}
           type="checkbox"
           checked={checked}
           className="checkbox rounded-full border"
           onChange={() => {
-            if (conclued) return;
+            if (concluded) return;
             else {
               setChecked(!checked);
-              props.saveConcluedQuest(props.quest);
+              props.saveConcludedQuest(props.quest);
             }
           }}
         />
 
-        {editMode && !conclued ? (
+        {editMode && !concluded ? (
           <input
             placeholder="quest"
             defaultValue={title}
@@ -35,12 +35,12 @@ export default function QuestItem(props) {
             className="rounded-full bg-secundary pl-2 w-full input-sm flex focus:outline-none"
           />
         ) : (
-          <p className={`break-words ${conclued ? "line-through" : ""}`}>
+          <p className={`break-words ${concluded ? "line-through" : ""}`}>
             {props.quest.title}
           </p>
         )}
       </div>
-      {!conclued && (
+      {!concluded && (
         <div className="flex gap-4 w-full sm:w-fit justify-center">
           <button
             onClick={() => {

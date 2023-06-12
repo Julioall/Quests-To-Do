@@ -9,7 +9,7 @@ export default function QuestList(props) {
             key={quest.id}
             quest={quest}
             saveEditQuest={props.saveEditQuest}
-            saveConcluedQuest={props.saveConcluedQuest}
+            saveConcludedQuest={props.saveConcludedQuest}
           />
         );
       })}
