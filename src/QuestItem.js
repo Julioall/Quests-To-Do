@@ -50,7 +50,14 @@ export default function QuestItem(props) {
           >
             Editar
           </button>
-          <button>Excluir</button>
+          <button
+            onClick={() => {
+              if (concluded) return;
+              else props.saveDeleteQuest(props.quest);
+            }}
+          >
+            Excluir
+          </button>
         </div>
       )}
     </div>
