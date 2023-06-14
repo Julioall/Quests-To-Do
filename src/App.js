@@ -13,6 +13,17 @@ function App() {
     (quest) => quest.status === "aberto"
   );
 
+  function saveDeleteQuest(quest) {
+    let auxQuests = quests;
+
+    const filterAuxQuests = auxQuests.filter(
+      (auxQuest) => auxQuest.id !== quest.id
+    );
+
+    localStorage.setItem("quests", JSON.stringify(filterAuxQuests));
+    getQuests();
+  }
+
   function saveEditQuest(quest, title) {
     let auxQuests = quests;
     const editedQuest = {
@@ -90,6 +101,7 @@ function App() {
             quests={notConcludedQuests}
             saveEditQuest={saveEditQuest}
             saveConcludedQuest={saveConcludedQuest}
+            saveDeleteQuest={saveDeleteQuest}
           />
         </div>
 
@@ -99,6 +111,7 @@ function App() {
             quests={concludedQuests}
             saveEditQuest={saveEditQuest}
             saveConcludedQuest={saveConcludedQuest}
+            saveDeleteQuest={saveDeleteQuest}
           />
         </div>
       </div>

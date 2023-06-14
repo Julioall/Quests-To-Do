@@ -11,7 +11,11 @@ export default function QuestItem(props) {
   const concluded = props.quest.status === "concluído";
 
   return (
-    <div className="flex gap-4 flex-col md:flex-row items-center">
+    <div
+      className="flex gap-4 flex-col md:flex-row items-center"
+      // id para teste do componente
+      data-testid="questItem"
+    >
       <div className="flex gap-4 items-center w-full sm:w-[80%]">
         <input
           disabled={concluded}
@@ -33,16 +37,28 @@ export default function QuestItem(props) {
             defaultValue={title}
             onChange={(e) => setTitle(e.target.value)}
             className="rounded-full bg-secundary pl-2 w-full input-sm flex focus:outline-none"
+            // id para teste do input
+            data-testid="input"
           />
         ) : (
-          <p className={`break-words ${concluded ? "line-through" : ""}`}>
+          <p
+            className={`break-words ${concluded ? "line-through" : ""}`}
+            // id para teste do parágrafo
+            data-testid="title"
+          >
             {props.quest.title}
           </p>
         )}
       </div>
       {!concluded && (
-        <div className="flex gap-4 w-full sm:w-fit justify-center">
+        <div
+          className="flex gap-4 w-full sm:w-fit justify-center"
+          // id da div de edição
+          data-testid="buttons"
+        >
           <button
+            // id do botão de edição
+            data-testid="editButton"
             onClick={() => {
               if (editMode) props.saveEditQuest(props.quest, title);
               setEditMode(!editMode);
@@ -50,7 +66,14 @@ export default function QuestItem(props) {
           >
             Editar
           </button>
-          <button>Excluir</button>
+          <button
+            onClick={() => {
+              if (concluded) return;
+              else props.saveDeleteQuest(props.quest);
+            }}
+          >
+            Excluir
+          </button>
         </div>
       )}
     </div>
