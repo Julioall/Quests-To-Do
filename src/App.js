@@ -1,119 +1,125 @@
 import { useState } from "react";
 import AddQuest from "./AddQuest";
 import QuestList from "./QuestList";
+import { DragDropContext, Droppable } from "@hello-pangea/dnd";
 
 function App() {
   const localQuests = JSON.parse(window.localStorage.getItem("quests")) || [];
   const [quests, setQuests] = useState(localQuests);
 
-  const concludedQuests = quests.filter(
-    (quest) => quest.status === "concluído"
-  );
-  const notConcludedQuests = quests.filter(
-    (quest) => quest.status === "aberto"
-  );
+  const statusMap = {
+    aberto: "Abertas",
+    fazendo: "Em Progresso",
+    concluído: "Concluídas",
+  };
 
-  function saveDeleteQuest(quest) {
-    let auxQuests = quests;
+  const groupedQuests = {
+    aberto: quests.filter((q) => q.status === "aberto"),
+    fazendo: quests.filter((q) => q.status === "fazendo"),
+    concluído: quests.filter((q) => q.status === "concluído"),
+  };
 
-    const filterAuxQuests = auxQuests.filter(
-      (auxQuest) => auxQuest.id !== quest.id
-    );
-
-    localStorage.setItem("quests", JSON.stringify(filterAuxQuests));
-    getQuests();
+  function saveQuestList(newList) {
+    localStorage.setItem("quests", JSON.stringify(newList));
+    setQuests(newList);
   }
 
-  function saveEditQuest(quest, title) {
-    let auxQuests = quests;
-    const editedQuest = {
-      id: quest.id,
-      title: title || quest.title,
-      status: quest.status,
-      created_at: quest.created_at,
-    };
+  function handleDragEnd(result) {
+    const { source, destination } = result;
+    if (!destination) return;
 
-    const findQuestPosition = auxQuests.findIndex(
-      (quest) => quest.id === editedQuest.id
+    if (
+      source.droppableId === destination.droppableId &&
+      source.index === destination.index
+    ) {
+      return;
+    }
+
+    const sourceStatus = source.droppableId;
+    const destStatus = destination.droppableId;
+
+    const sourceQuests = [...groupedQuests[sourceStatus]];
+    const [movedQuest] = sourceQuests.splice(source.index, 1);
+
+    movedQuest.status = destStatus;
+
+    const updatedQuests = quests.map((q) =>
+      q.id === movedQuest.id ? movedQuest : q
     );
 
-    auxQuests.splice(findQuestPosition, 1, editedQuest);
-
-    localStorage.setItem("quests", JSON.stringify(auxQuests));
-
-    getQuests();
-  }
-
-  function saveConcludedQuest(quest) {
-    let auxQuests = quests;
-    const editedQuest = {
-      id: quest.id,
-      title: quest.title,
-      status: "concluído",
-      created_at: quest.created_at,
-    };
-
-    const findQuestPosition = auxQuests.findIndex(
-      (quest) => quest.id === editedQuest.id
-    );
-
-    auxQuests.splice(findQuestPosition, 1, editedQuest);
-
-    localStorage.setItem("quests", JSON.stringify(auxQuests));
-
-    getQuests();
+    saveQuestList(updatedQuests);
   }
 
   function saveAddQuest(title) {
-    let auxQuests = quests;
-    let id = 0;
-    if (auxQuests.length) {
-      id = auxQuests[auxQuests.length - 1].id;
-    }
-    id++;
-
-    const createdQuest = {
-      id: id,
-      title: title,
+    const id = quests.length ? quests[quests.length - 1].id + 1 : 1;
+    const newQuest = {
+      id,
+      title,
       status: "aberto",
-      created_at: new Date(Date.now()).toUTCString(),
+      created_at: new Date().toUTCString(),
     };
-    auxQuests.push(createdQuest);
-    localStorage.setItem("quests", JSON.stringify(auxQuests));
-    getQuests();
+    const updated = [...quests, newQuest];
+    saveQuestList(updated);
   }
 
-  function getQuests() {
-    setQuests(JSON.parse(window.localStorage.getItem("quests")));
+  function saveEditQuest(questToEdit, newTitle) {
+    const updatedQuests = quests.map((quest) =>
+      quest.id === questToEdit.id ? { ...quest, title: newTitle } : quest
+    );
+    setQuests(updatedQuests);
+    localStorage.setItem("quests", JSON.stringify(updatedQuests));
+  }
+
+  function saveDeleteQuest(questToDelete) {
+    const filteredQuests = quests.filter(
+      (quest) => quest.id !== questToDelete.id
+    );
+    setQuests(filteredQuests);
+    localStorage.setItem("quests", JSON.stringify(filteredQuests));
   }
 
   return (
-    <div className="flex h-screen justify-center items-center">
-      <div className="card w-[80%] lg:w-[50%] h-[70%] shadow-md rounded-sm transform ease-out duration-300 items-center p-10 gap-5">
-        <h1 className="text-5xl font-work font-bold w-fit text-center">
-          Quests To Do
-        </h1>
+    <div className="flex h-screen justify-center items-center bg-gray-50">
+      <div className="card w-[90%] h-[90%] shadow-md rounded-xl flex flex-col p-8 gap-6 bg-white">
+        <h1 className="text-4xl font-bold text-center">Quests To Do</h1>
         <AddQuest saveAddQuest={saveAddQuest} />
 
-        <div className="flex flex-col gap-4 w-full items-center">
-          <h2>Abertas</h2>
-          <QuestList
-            quests={notConcludedQuests}
-            saveEditQuest={saveEditQuest}
-            saveConcludedQuest={saveConcludedQuest}
-            saveDeleteQuest={saveDeleteQuest}
-          />
-        </div>
-
-        <div className="flex flex-col gap-4 w-full items-center">
-          <h2>Concluídas</h2>
-          <QuestList
-            quests={concludedQuests}
-            saveEditQuest={saveEditQuest}
-            saveConcludedQuest={saveConcludedQuest}
-            saveDeleteQuest={saveDeleteQuest}
-          />
-        </div>
+        <DragDropContext onDragEnd={handleDragEnd}>
+          <div className="flex flex-row w-full h-full gap-4 overflow-hidden">
+            {Object.entries(groupedQuests).map(([status, list]) => (
+              <div
+                key={status}
+                className={`flex flex-col w-full h-full rounded-lg p-3 gap-2 ${
+                  status === "aberto"
+                    ? "bg-gray-100"
+                    : status === "fazendo"
+                    ? "bg-gray-200"
+                    : "bg-gray-300"
+                }`}
+              >
+                <h2 className="text-xl font-semibold text-center">
+                  {statusMap[status]}
+                </h2>
+                <Droppable droppableId={status}>
+                  {(provided) => (
+                    <div
+                      className="flex flex-col gap-2 overflow-y-auto scrollbar-thin h-full"
+                      {...provided.droppableProps}
+                      ref={provided.innerRef}
+                    >
+                      <QuestList 
+                        quests={list}
+                        saveEditQuest={saveEditQuest}
+                        saveDeleteQuest={saveDeleteQuest}
+                      />
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </Droppable>
+              </div>
+            ))}
+          </div>
+        </DragDropContext>
       </div>
     </div>
   );
